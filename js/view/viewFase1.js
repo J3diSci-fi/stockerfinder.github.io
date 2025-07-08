@@ -66,6 +66,7 @@ export default class ViewFase1 {
         <div class="background-fase1">
           <div id="playerNome" style="position:absolute; top:0px; right:32px; color:#fff; font-size:1.1em; font-weight:bold; text-shadow:1px 1px 4px #000; z-index:11;">Player</div>
           <div id="timerFase1" style="position:absolute; top:20px; right:32px; background:rgba(0,0,0,0.7); color:#fff; font-size:1.5em; padding:6px 18px; border-radius:12px; z-index:10;">00:45</div>
+          <div id="modalBoasVindasFase1" style="display:none; position:absolute; left:50%; bottom:32px; transform:translateX(-50%); background:rgba(255,255,255,0.97); color:#222; min-width:320px; max-width:90vw; padding:24px 32px 20px 32px; border-radius:18px; box-shadow:0 2px 16px rgba(0,0,0,0.18); z-index:2001; text-align:center; font-size:1.15em;"></div>
           ${ordemHTML}
           ${gridHTML}
           ${prateleiraHTML}
@@ -188,6 +189,9 @@ export default class ViewFase1 {
       const nome = this.controller.personagem && this.controller.personagem.nome ? this.controller.personagem.nome : 'Player';
       const playerNomeDiv = document.getElementById('playerNome');
       if (playerNomeDiv) playerNomeDiv.textContent = nome;
+
+      // Modal de boas-vindas
+      this.exibirBoasVindas(nome);
     });
   }
 
@@ -319,5 +323,29 @@ export default class ViewFase1 {
         this.controller.render();
       };
     }
+  }
+
+  exibirBoasVindas(nome) {
+    const mensagens = [
+      `Bem-vindo, <b>${nome}</b>!<br>Este é o início da sua jornada. Aqui você vai aprender a programar o personagem para coletar os itens na ordem correta.`,
+      'Use os botões de seta para montar a sequência de comandos. Depois, clique em <b>Executar</b> para ver o personagem se mover.',
+      'Se errar, use o botão de <b>reset</b> para tentar novamente. Boa sorte!'
+    ];
+    let passo = 0;
+    const modal = document.getElementById('modalBoasVindasFase1');
+    if (!modal) return;
+    const mostrarPasso = () => {
+      modal.innerHTML = `<div style='margin-bottom:18px;'>${mensagens[passo]}</div><button id='btnNextBoasVindas' style='padding:8px 32px; font-size:1em; border-radius:8px; background:#4caf50; color:#fff; border:none; cursor:pointer;'>${passo < mensagens.length-1 ? 'Próximo' : 'Fechar'}</button>`;
+      modal.style.display = 'block';
+      document.getElementById('btnNextBoasVindas').onclick = () => {
+        passo++;
+        if (passo < mensagens.length) {
+          mostrarPasso();
+        } else {
+          modal.style.display = 'none';
+        }
+      };
+    };
+    mostrarPasso();
   }
 } 
