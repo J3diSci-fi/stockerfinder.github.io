@@ -49,14 +49,24 @@ export default class Fase3Controller {
   executarComandos(comandos) {
     // Expande comandos do tipo loop para comandos simples
     let comandosExpandidos = [];
+    let quantidadeLoops = 0;
     for (let cmd of comandos) {
       if (typeof cmd === 'object' && cmd.tipo === 'Loop') {
+        quantidadeLoops++;
         for (let i = 0; i < cmd.vezes; i++) {
           comandosExpandidos.push(cmd.direcao);
         }
       } else {
         comandosExpandidos.push(cmd);
       }
+    }
+    // Exigir pelo menos 2 loops
+    if (quantidadeLoops < 2) {
+      if (this.view.mostrarRequisitoLoopPanel3) {
+        this.view.mostrarRequisitoLoopPanel3();
+      }
+      this.view.reabilitarBotaoExecutar();
+      return;
     }
     import('../model/fase3Model.js').then(({ default: Fase3Model }) => {
       let matriz = Fase3Model.matriz.map(row => row.slice());

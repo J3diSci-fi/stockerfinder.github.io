@@ -61,6 +61,7 @@ export default class ViewFase2 {
 
       this.controller.rootElement.innerHTML = `
         <div class="background-fase1">
+          <div id="playerNome" style="position:absolute; top:0px; right:32px; color:#fff; font-size:1.1em; font-weight:bold; text-shadow:1px 1px 4px #000; z-index:11;">Player</div>
           <div id="timerFase2" style="position:absolute; top:20px; right:32px; background:rgba(0,0,0,0.7); color:#fff; font-size:1.5em; padding:6px 18px; border-radius:12px; z-index:10;">01:00</div>
           <div id="avisoLoopFase2" style="position:absolute; top:20px; right:690px; background:rgba(255,193,7,0.95); color:#222; font-size:1.1em; padding:6px 18px; border-radius:12px; z-index:10; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.08);">Utilize o loop pelo menos 1 vez</div>
           ${ordemHTML}
@@ -197,6 +198,11 @@ export default class ViewFase2 {
           this.mostrarTempoEsgotadoPanel2();
         }
       }, 1000);
+
+      // Atualizar nome do player
+      const nome = this.controller.personagem && this.controller.personagem.nome ? this.controller.personagem.nome : 'Player';
+      const playerNomeDiv = document.getElementById('playerNome');
+      if (playerNomeDiv) playerNomeDiv.textContent = nome;
     });
   }
 
@@ -286,10 +292,10 @@ export default class ViewFase2 {
     const produtosIniciais = [
       'pote1.png',
       'pote2.png', 
-      'prateleira.png',
-      'falta.png',
-      'morango.png',
-      'garrafa1.png'
+      'creme.png',
+      'pote1.png',
+      'pote2.png',
+      'creme.png'
     ];
     const prateleiraGrid = document.getElementById('prateleiraGrid');
     if (!prateleiraGrid) return;

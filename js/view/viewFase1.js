@@ -64,6 +64,7 @@ export default class ViewFase1 {
 
       this.controller.rootElement.innerHTML = `
         <div class="background-fase1">
+          <div id="playerNome" style="position:absolute; top:0px; right:32px; color:#fff; font-size:1.1em; font-weight:bold; text-shadow:1px 1px 4px #000; z-index:11;">Player</div>
           <div id="timerFase1" style="position:absolute; top:20px; right:32px; background:rgba(0,0,0,0.7); color:#fff; font-size:1.5em; padding:6px 18px; border-radius:12px; z-index:10;">00:45</div>
           ${ordemHTML}
           ${gridHTML}
@@ -182,6 +183,11 @@ export default class ViewFase1 {
           this.mostrarTempoEsgotadoPanel();
         }
       }, 1000);
+
+      // Atualizar nome do player
+      const nome = this.controller.personagem && this.controller.personagem.nome ? this.controller.personagem.nome : 'Player';
+      const playerNomeDiv = document.getElementById('playerNome');
+      if (playerNomeDiv) playerNomeDiv.textContent = nome;
     });
   }
 
