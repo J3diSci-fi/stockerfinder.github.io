@@ -5,3 +5,85 @@
     align-items: center;
     height: 80%;
 }
+
+.creditos-background {
+  background-color: rgb(254,241,219);
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+}
+.creditos-container {
+  background: rgba(30,30,30,0.97);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px #0008;
+  padding: 40px 32px 32px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 420px;
+  width: 100%;
+}
+.creditos-title {
+  font-family: "Play", sans-serif;
+  color: #4caf50;
+  font-size: 2.3rem;
+  margin-bottom: 18px;
+  letter-spacing: 2px;
+}
+.creditos-content {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.creditos-nome {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 2px;
+}
+.creditos-aluno {
+  font-size: 1.7rem;
+  color: #ffd600;
+  margin: 0 0 10px 0;
+  font-family: "Play", sans-serif;
+}
+.creditos-desc {
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+.creditos-prof {
+  color: #b2ff59;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.creditos-ano {
+  color: #aaa;
+  font-size: 1rem;
+}
+.creditos-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 28px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 10px;
+}
+.creditos-btn:hover {
+  background: #388e3c;
+}
+@media (max-width: 600px) {
+  .creditos-container {
+    padding: 18px 4vw;
+    max-width: 98vw;
+  }
+  .creditos-title {
+    font-size: 1.3rem;
+  }
+  .creditos-aluno {
+    font-size: 1.1rem;
+  }
+}

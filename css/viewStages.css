@@ -48,6 +48,14 @@
     background-color: rgb(254,241,219);
 }
 
+.fase-desbloqueada {
+    background-color: rgb(254,241,219) !important;
+}
+
+.fase-bloqueada {
+    background-color: rgb(128,137,139) !important;
+}
+
 .star-initial{
     display: flex;
     flex-direction: row;
@@ -78,4 +86,180 @@
 .cadeado{
     transform: translate(60px,5px);
     width: 110px;
+}
+
+.options-panel {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.options-box {
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+.options-box button {
+  padding: 8px 24px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 6px;
+  background: #1976d2;
+  color: #fff;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background 0.2s;
+}
+.options-box button:hover {
+  background: #1565c0;
+}
+.background-fase1 {
+  min-height: 700px;
+  max-height: 700px;
+  height: 700px;
+  width: auto;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.452);
+  background: url('../assets/images/game/Game.png') no-repeat center center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: rgb(254,233,192);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#btnTop {
+  position: absolute;
+  left: 83%;
+  top: 140px;
+  transform: translateX(-50%);
+}
+
+#btnLeft {
+  position: absolute;
+  left: 880px;
+  top: 260px;
+  transform: translateY(-50%);
+}
+
+#btnDown {
+  position: absolute;
+  left: 830px;
+  bottom: 400px;
+  transform: translateX(-50%);
+}
+
+#btnRight {
+  position: absolute;
+  right: 40px;
+  top: 180px;
+  transform: translateY(-50%);
+}
+
+#btnLoop{
+  margin-top: 275px;
+}
+
+#btnLoop {
+  width: 90px !important;
+  height: 90px !important;
+}
+#btnLoop img {
+  width: 66px !important;
+  height: 66px !important;
+}
+
+.command-btn {
+  background: none;
+  border: none;
+  border-radius: 0;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+  cursor: pointer;
+  transition: none;
+  padding: 0;
+  margin: 0;
+}
+
+.command-btn img {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.2s;
+}
+.command-btn:hover img {
+  transform: scale(1.15);
+}
+
+.fase1-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 64px);
+  grid-template-rows: repeat(5, 64px);
+  gap: 0;
+  margin: 80px 0 16px 0;
+}
+.grid-cell {
+  width: 64px;
+  height: 64px;
+  border: 1.5px solid #333;
+  background: none;
+  box-sizing: border-box;
+}
+.executar-btn {
+    padding: 28px 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #9b1f1f 0%, #cc0f0fd2 100%);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    cursor: pointer;
+    margin-top: 15px;
+    margin-left: 390px;
+    letter-spacing: 1px;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .executar-btn:hover {
+    background: linear-gradient(90deg, #b11010 0%, #cc0f0fd2 100%);
+    transform: scale(1.07);
+  }
+
+.ordem-coleta-area {
+  position: absolute;
+  top: 84px;
+  left: 533px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+  font-size: 1.1em;
+  color: #333;
+  justify-content: center;
+  z-index: 20;
+}
+
+.ordem-coleta-img {
+  width: 45px;
+  height: 60px;
+  border-radius: 6px;
+  padding: 2px;
+}
+
+.ordem-coleta-lista {
+  display: flex;
+  gap: 28px;
 }

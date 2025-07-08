@@ -1,0 +1,108 @@
+/* Centralização e fundo igual aos outros menus */
+.opcoes-background-options {
+  background-color: rgb(254,241,219);
+  border-radius: 15px;
+  min-height: 80.3vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.opcoes-options-container {
+  background: rgba(30, 30, 30, 0);
+  border-radius: 16px;
+  box-shadow: 0 4px 24px #0008;
+  padding: 32px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
+  min-width: 340px;
+  max-width: 400px;
+}
+
+.opcoes-titleh1opcoes {
+  text-align: center;
+  font-size: 2.2rem;
+  margin-bottom: 18px;
+  letter-spacing: 2px;
+  font-family: "Play", sans-serif;
+  color: rgb(46,59,70);
+  font-weight: 700;
+}
+
+.opcoes-option-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.opcoes-option-group label {
+  flex: 1 1 120px;
+  font-size: 1.1rem;
+}
+
+input[type="range"] {
+  width: 120px;
+  accent-color: #4caf50;
+}
+
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: #4caf50;
+}
+
+select {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #222;
+  color: #fff;
+}
+
+.opcoes-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.opcoes-btn:hover {
+  background: #388e3c;
+}
+
+.opcoes-btn-reset {
+  background: #e53935;
+}
+.opcoes-btn-reset:hover {
+  background: #b71c1c;
+}
+
+.opcoes-version {
+  justify-content: flex-end;
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+@media (max-width: 500px) {
+  .opcoes-options-container {
+    min-width: 90vw;
+    max-width: 98vw;
+    padding: 12px 4vw;
+  }
+  .opcoes-titleh1opcoes {
+    font-size: 1.3rem;
+  }
+  .opcoes-option-group label {
+    font-size: 1rem;
+  }
+} 

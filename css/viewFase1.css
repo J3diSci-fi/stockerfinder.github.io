@@ -1,0 +1,208 @@
+.fase1-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 64px);
+  grid-template-rows: repeat(5, 64px);
+  gap: 2px;
+}
+
+.fase1-grid .grid-cell {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.fase1-grid .personagem-img,
+.fase1-grid .item-img {
+  width: 52px !important;
+  height: 52px !important;
+  max-width: 52px !important;
+  max-height: 52px !important;
+  min-width: 52px !important;
+  min-height: 52px !important;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.options-panel {
+  position: absolute;
+  border-radius: 10px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.options-box {
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 400px;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.excluir-btn {
+  position: absolute;
+  left: 390px;
+  top: 0px;
+  width: 35px;
+  height: 35px;
+  padding: 4px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #2196F3 0%, #1976D2 100%);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.excluir-btn:hover {
+  background: linear-gradient(90deg, #1976D2 0%, #1565C0 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.excluir-btn:disabled {
+  background: linear-gradient(90deg, #666 0%, #555 100%);
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+.excluir-btn:disabled:hover {
+  background: linear-gradient(90deg, #666 0%, #555 100%);
+  transform: none;
+}
+
+.resetar-btn {
+  position: absolute;
+  left: 430px;
+  top: 0px;
+  width: 35px;
+  height: 35px;
+  padding: 4px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #FFC107 0%, #FFB300 100%);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resetar-btn:hover {
+  background: linear-gradient(90deg, #FFB300 0%, #FF8F00 100%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.resetar-btn:disabled {
+  background: linear-gradient(90deg, #666 0%, #555 100%);
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+.resetar-btn:disabled:hover {
+  background: linear-gradient(90deg, #666 0%, #555 100%);
+  transform: none;
+}
+
+.executar-btn {
+  height: 35px;
+  padding: 0 12px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  color: white;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #9b1f1f 0%, #cc0f0fd2 100%);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+  cursor: pointer;
+  margin-top: 45px;
+  margin-left: 390px;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, transform 0.2s;
+  border: none;
+}
+
+.executar-btn:hover {
+  background: linear-gradient(90deg, #b11010 0%, #cc0f0fd2 100%);
+  transform: scale(1.07);
+}
+
+.executar-btn:disabled {
+  background: linear-gradient(90deg, #666 0%, #555 100%);
+  cursor: not-allowed;
+  transform: none;
+  opacity: 0.6;
+}
+
+.executar-btn:disabled:hover {
+  background: linear-gradient(90deg, #666 0%, #555 100%);
+  transform: none;
+}
+
+/* Grid da Prateleira 3x3 */
+.prateleira-grid {
+  position: absolute;
+  left: 18.5px; /* POSIÇÃO X - você pode alterar aqui */
+  top: 357px;  /* POSIÇÃO Y - você pode alterar aqui */
+  display: grid;
+  grid-template-columns: repeat(3, 60px); /* Largura de cada item */
+  grid-template-rows: repeat(3, 60px);    /* Altura de cada item */
+  gap: 10px; /* GAP - você pode alterar aqui */
+  row-gap: 23px;
+
+  padding: 15px;
+
+  z-index: 1000; /* Garante que fique por cima de outros elementos */
+  pointer-events: none; /* Permite clicar através da prateleira */
+}
+
+.prateleira-item {
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.3);
+  border: 2px dashed #999;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.prateleira-item.ocupado {
+  background: rgba(255, 255, 255, 0.8);
+  border: 2px solid #4CAF50;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+.prateleira-item img {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+} 

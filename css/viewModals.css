@@ -22,11 +22,14 @@
 }
 
 .modal-character {
-  width: 80px;
+  width: 70px;
   margin-bottom: 10px;
 }
 
 .modal-message {
+  font-family: "Play", sans-serif;
+  font-weight: 500;
+  font-style: normal;
   font-size: 16px;
   margin-bottom: 10px;
 }
@@ -47,6 +50,9 @@
 }
 
 .modal-actions button {
+  font-family: "Play", sans-serif;
+  font-weight: 500;
+  font-style: normal;
   padding: 10px 20px;
   background-color: #4CAF50;
   color: white;
@@ -55,6 +61,58 @@
   cursor: pointer;
 }
 
+#modal-cancel{
+  background-color: rgb(190, 21, 21);
+}
+
 .modal-actions button:hover {
   background-color: #388e3c;
+}
+
+.modal-overlay {
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Esta classe será adicionada via JS após o elemento ser inserido no DOM */
+.modal-overlay.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal-delete-all-saves .modal-box {
+  border: 2px solid #e74c3c;
+  background: #fff0f0;
+}
+.modal-delete-all-saves .modal-icon-delete {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 10px;
+}
+.modal-delete-all-saves .modal-message {
+  color: #c0392b;
+  font-weight: bold;
+}
+#modal-deleteall-confirm.btn-danger {
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+#modal-deleteall-cancel {
+  background: #bbb;
+  color: #222;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#deleteAllSavesBtn{
+  left:923px;
+  top: 635px;
 }

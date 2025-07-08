@@ -1,0 +1,99 @@
+/* Estilos para Fase 2 - Blocos e Grid */
+.background-fase2 {
+  background: #fbeecd;
+  border-radius: 18px;
+  padding: 32px;
+  min-height: 700px;
+  min-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.blocos-disponiveis {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bloco {
+  background: #fff;
+  border: 2px solid #1976d2;
+  border-radius: 8px;
+  padding: 12px 18px;
+  font-size: 1rem;
+  color: #1976d2;
+  font-weight: bold;
+  cursor: grab;
+  user-select: none;
+  transition: box-shadow 0.2s, background 0.2s;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.bloco.loop {
+  border-color: #ffb300;
+  color: #ffb300;
+}
+.bloco:active {
+  background: #e3f2fd;
+}
+
+.area-comandos {
+  min-height: 70px;
+  background: #e3e3e3;
+  border: 2px dashed #1976d2;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  padding: 12px;
+  width: 100%;
+  min-width: 600px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.area-comandos-label {
+  color: #888;
+  font-size: 1rem;
+}
+
+.executar-btn {
+  background: linear-gradient(90deg, #1976d2 0%, #64b5f6 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 24px;
+  margin-top: 8px;
+  transition: background 0.2s, transform 0.2s;
+}
+.executar-btn:hover {
+  background: linear-gradient(90deg, #1565c0 0%, #1976d2 100%);
+  transform: scale(1.05);
+}
+
+.grid-fase2 {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(5, 64px);
+  grid-template-rows: repeat(5, 64px);
+  gap: 2px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px #0002;
+}
+.grid-fase2-cell {
+  width: 64px;
+  height: 64px;
+  border: 1px solid #bbb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fafafa;
+} 

@@ -9,12 +9,16 @@ export default class MenuController {
   setStagesController(stagesController){
     this.stagesController = stagesController;
   }
-  setCreditsController(creditsController){
-    this.creditsController = creditsController;
+  setCreditosController(creditosController){
+    this.creditsController = creditosController;
   }
 
   setLoadController(loadController){
     this.loadController = loadController;
+  }
+
+  setOptionsController(optionsController){
+    this.optionsController = optionsController;
   }
 
   render() {
@@ -76,6 +80,9 @@ export default class MenuController {
   }
 
   startGame() {
+    if (this.stagesController && typeof this.stagesController.setPersonagem === 'function') {
+      this.stagesController.setPersonagem(null); // força sempre abrir o modal
+    }
     this.stagesController.render();
   }
 
@@ -84,11 +91,15 @@ export default class MenuController {
   }
 
   loadGame() {
-    this.loadController.render();
+    if (this.loadController) {
+      this.loadController.render();
+    }
   }
 
   openOptions(){
-    alert('Use as setas para mover e pegue os itens corretos!');
+    if (this.optionsController) {
+      this.optionsController.render();
+    }
   }
 
   showCredits(){
