@@ -290,10 +290,10 @@ export default class ViewFase2 {
 
   preencherPrateleiraInicial() {
     const produtosIniciais = [
-      'pote1.png',
+      'morango.png',
       'pote2.png', 
       'creme.png',
-      'pote1.png',
+      'morango.png',
       'pote2.png',
       'creme.png'
     ];
