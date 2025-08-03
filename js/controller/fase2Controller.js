@@ -11,19 +11,29 @@ export default class Fase2Controller {
   }
 
   render() {
+    // Limpar timer anterior se existir
+    if (this.view.timerInterval) {
+      clearInterval(this.view.timerInterval);
+      this.view.timerInterval = null;
+    }
     this.view.renderFase2();
-    document.addEventListener('keydown', this.handleKeyDown);
+    // document.addEventListener('keydown', this.handleKeyDown); // Remover atalho Esc
     setTimeout(() => {
       this.view.reabilitarBotaoExecutar();
     }, 100);
   }
 
-  handleKeyDown(event) {
-    if (event.key === 'Escape' && !this.panelVisible) {
+  abrirMenuOpcoes() {
+    if (!this.panelVisible) {
       this.panelVisible = true;
       this.view.showOptionsPanel();
       this.addPanelListeners();
+      this.view.pausarTimer && this.view.pausarTimer();
     }
+  }
+
+  handleKeyDown(event) {
+    // Remover lógica do Esc
   }
 
   addPanelListeners() {
@@ -34,6 +44,7 @@ export default class Fase2Controller {
       btnContinue.onclick = () => {
         this.view.hideOptionsPanel();
         this.panelVisible = false;
+        this.view.retomarTimer && this.view.retomarTimer();
       };
     }
     if (btnRestart) {
@@ -108,6 +119,11 @@ export default class Fase2Controller {
         document.body.appendChild(popup);
         document.getElementById('btnVoltarStages').onclick = () => {
           document.body.removeChild(popup);
+          // Limpar timer antes de sair
+          if (this.view.timerInterval) {
+            clearInterval(this.view.timerInterval);
+            this.view.timerInterval = null;
+          }
           if (this.menuController && this.menuController.stagesController) {
             this.menuController.stagesController.setPersonagem(this.personagem);
             this.menuController.stagesController.render();

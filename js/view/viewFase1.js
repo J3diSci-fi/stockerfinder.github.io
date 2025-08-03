@@ -1,6 +1,8 @@
 export default class ViewFase1 {
   constructor(controller) {
     this.controller = controller;
+    this.tempoRestante = 45;
+    this.timerInterval = null;
   }
 
   renderFase1() {
@@ -66,7 +68,9 @@ export default class ViewFase1 {
         <div class="background-fase1">
           <div id="playerNome" style="position:absolute; top:0px; right:32px; color:#fff; font-size:1.1em; font-weight:bold; text-shadow:1px 1px 4px #000; z-index:11;">Player</div>
           <div id="timerFase1" style="position:absolute; top:20px; right:32px; background:rgba(0,0,0,0.7); color:#fff; font-size:1.5em; padding:6px 18px; border-radius:12px; z-index:10;">00:45</div>
-          <div id="modalBoasVindasFase1" style="display:none; position:absolute; left:50%; bottom:32px; transform:translateX(-50%); background:rgba(255,255,255,0.97); color:#222; min-width:320px; max-width:90vw; padding:24px 32px 20px 32px; border-radius:18px; box-shadow:0 2px 16px rgba(0,0,0,0.18); z-index:2001; text-align:center; font-size:1.15em;"></div>
+          <div id="tutorialFase1Overlay" style="display:none;">
+            <div id="modalBoasVindasFase1"></div>
+          </div>
           ${ordemHTML}
           ${gridHTML}
           ${prateleiraHTML}
@@ -166,32 +170,37 @@ export default class ViewFase1 {
       };
       atualizarComandosVisual();
 
-      // Timer Fase 1
-      if (this.timerInterval) clearInterval(this.timerInterval);
-      let tempoRestante = 45;
-      const timerDiv = document.getElementById('timerFase1');
-      const atualizarTimer = () => {
-        const min = String(Math.floor(tempoRestante / 60)).padStart(2, '0');
-        const seg = String(tempoRestante % 60).padStart(2, '0');
-        timerDiv.textContent = `${min}:${seg}`;
-      };
-      atualizarTimer();
-      this.timerInterval = setInterval(() => {
-        tempoRestante--;
-        atualizarTimer();
-        if (tempoRestante <= 0) {
-          clearInterval(this.timerInterval);
-          this.mostrarTempoEsgotadoPanel();
-        }
-      }, 1000);
-
       // Atualizar nome do player
       const nome = this.controller.personagem && this.controller.personagem.nome ? this.controller.personagem.nome : 'Player';
       const playerNomeDiv = document.getElementById('playerNome');
       if (playerNomeDiv) playerNomeDiv.textContent = nome;
 
-      // Modal de boas-vindas
+      // Modal de boas-vindas - o timer será iniciado após o tutorial
       this.exibirBoasVindas(nome);
+
+      // Adicionar botão de menu após o container existir
+      const container = document.querySelector('.background-fase1');
+      if (container && !document.getElementById('btnMenuLoop')) {
+        const btn = document.createElement('button');
+        btn.id = 'btnMenuLoop';
+        btn.style.position = 'absolute';
+        btn.style.top = '20px';
+        btn.style.left = '20px';
+        btn.style.width = '56px';
+        btn.style.height = '56px';
+        btn.style.zIndex = '1002';
+        btn.style.background = 'none';
+        btn.style.border = '1px solid #333';
+        btn.style.borderRadius = '8px';
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = '<img src="../assets/images/game/hamburger.png" alt="Menu" style="width: 100%; height: 100%; object-fit: contain; pointer-events: none;" />';
+        btn.onclick = () => {
+          if (this.controller && typeof this.controller.abrirMenuOpcoes === 'function') {
+            this.controller.abrirMenuOpcoes();
+          }
+        };
+        container.prepend(btn);
+      }
     });
   }
 
@@ -215,17 +224,36 @@ export default class ViewFase1 {
   }
 
   showOptionsPanel() {
-    document.getElementById('optionsPanel').style.display = 'flex'; 
+    document.getElementById('optionsPanel').style.display = 'flex';
+    // Pausar o timer quando o menu de opções é aberto
+    this.pausarTimer();
+    // Ocultar o botão de menu
+    const menuBtn = document.getElementById('btnMenuLoop');
+    if (menuBtn) {
+      menuBtn.style.display = 'none';
+    }
   }
 
   hideOptionsPanel() {
     document.getElementById('optionsPanel').style.display = 'none';
+    // Retomar o timer quando o menu de opções é fechado
+    this.retomarTimer();
+    // Mostrar o botão de menu novamente
+    const menuBtn = document.getElementById('btnMenuLoop');
+    if (menuBtn) {
+      menuBtn.style.display = 'block';
+    }
   }
 
   showErroPanel() {
     document.getElementById('erroPanel').style.display = 'flex';
     document.getElementById('btnTentarNovamente').onclick = () => {
       this.hideErroPanel();
+      // Limpar timer antes de reiniciar
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+      }
       this.controller.render();
     };
   }
@@ -313,6 +341,54 @@ export default class ViewFase1 {
     // Os últimos 3 espaços ficam vazios (para os itens que serão coletados)
   }
 
+  iniciarTimer() {
+    // Timer Fase 1
+    if (this.timerInterval) clearInterval(this.timerInterval);
+    this.tempoRestante = 45;
+    const timerDiv = document.getElementById('timerFase1');
+    const atualizarTimer = () => {
+      const min = String(Math.floor(this.tempoRestante / 60)).padStart(2, '0');
+      const seg = String(this.tempoRestante % 60).padStart(2, '0');
+      timerDiv.textContent = `${min}:${seg}`;
+    };
+    atualizarTimer();
+    this.timerInterval = setInterval(() => {
+      this.tempoRestante--;
+      atualizarTimer();
+      if (this.tempoRestante <= 0) {
+        clearInterval(this.timerInterval);
+        this.mostrarTempoEsgotadoPanel();
+      }
+    }, 1000);
+  }
+
+  pausarTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  retomarTimer() {
+    if (this.timerInterval === null && this.tempoRestante > 0) {
+      const timerDiv = document.getElementById('timerFase1');
+      const atualizarTimer = () => {
+        const min = String(Math.floor(this.tempoRestante / 60)).padStart(2, '0');
+        const seg = String(this.tempoRestante % 60).padStart(2, '0');
+        timerDiv.textContent = `${min}:${seg}`;
+      };
+      atualizarTimer();
+      this.timerInterval = setInterval(() => {
+        this.tempoRestante--;
+        atualizarTimer();
+        if (this.tempoRestante <= 0) {
+          clearInterval(this.timerInterval);
+          this.mostrarTempoEsgotadoPanel();
+        }
+      }, 1000);
+    }
+  }
+
   mostrarTempoEsgotadoPanel() {
     const panel = document.getElementById('tempoEsgotadoPanel');
     if (panel) {
@@ -320,29 +396,73 @@ export default class ViewFase1 {
       document.getElementById('btnTentarNovamenteTempo').onclick = () => {
         panel.style.display = 'none';
         if (this.timerInterval) clearInterval(this.timerInterval);
+        this.timerInterval = null;
+        this.tempoRestante = 45;
         this.controller.render();
       };
     }
   }
 
   exibirBoasVindas(nome) {
+    // Verificar se deve mostrar as instruções
+    if (this.controller.personagem && !this.controller.personagem.getMostrarInstrucoesFase1()) {
+      // Se não deve mostrar o tutorial, iniciar o timer imediatamente
+      this.iniciarTimer();
+      return;
+    }
+
     const mensagens = [
       `Bem-vindo, <b>${nome}</b>!<br>Este é o início da sua jornada. Aqui você vai aprender a programar o personagem para coletar os itens na ordem correta.`,
       'Use os botões de seta para montar a sequência de comandos. Depois, clique em <b>Executar</b> para ver o personagem se mover.',
-      'Se errar, use o botão de <b>reset</b> para tentar novamente. Boa sorte!'
+      'Se errar, use o botão de <b>reset</b> <img src="../assets/images/icons/reset.png" alt="Reset" width="32" height="32"> para reiniciar os comandos. Boa sorte!'
     ];
     let passo = 0;
     const modal = document.getElementById('modalBoasVindasFase1');
-    if (!modal) return;
+    const overlay = document.getElementById('tutorialFase1Overlay');
+    if (!modal || !overlay) return;
+    
     const mostrarPasso = () => {
-      modal.innerHTML = `<div style='margin-bottom:18px;'>${mensagens[passo]}</div><button id='btnNextBoasVindas' style='padding:8px 32px; font-size:1em; border-radius:8px; background:#4caf50; color:#fff; border:none; cursor:pointer;'>${passo < mensagens.length-1 ? 'Próximo' : 'Fechar'}</button>`;
-      modal.style.display = 'block';
+      let checkboxHTML = '';
+      if (passo === mensagens.length - 1) {
+        checkboxHTML = `
+          <div style="margin-top: 16px; text-align: left; font-size: 0.9em;">
+            <label style="display: flex; align-items: center; cursor: pointer;">
+              <input type="checkbox" id="naoMostrarInstrucoes" style="margin-right: 8px;">
+              Não mostrar estas instruções novamente
+            </label>
+          </div>
+        `;
+      }
+      
+      modal.innerHTML = `
+        <div style='margin-bottom:18px;'>${mensagens[passo]}</div>
+        ${checkboxHTML}
+        <button id='btnNextBoasVindas' style='padding:8px 32px; font-size:1em; border-radius:8px; background:#4caf50; color:#fff; border:none; cursor:pointer;'>${passo < mensagens.length-1 ? 'Próximo' : 'Fechar'}</button>
+      `;
+      overlay.style.display = 'flex';
+      
       document.getElementById('btnNextBoasVindas').onclick = () => {
+        // Se for o último passo, salvar a configuração da checkbox
+        if (passo === mensagens.length - 1) {
+          const checkbox = document.getElementById('naoMostrarInstrucoes');
+          if (checkbox && checkbox.checked && this.controller.personagem) {
+            this.controller.personagem.setMostrarInstrucoesFase1(false);
+            // Salvar no localStorage
+            if (window.saveSlot !== undefined) {
+              import('../services/saveService.js').then(({ default: saveService }) => {
+                saveService.updatePersonagem(this.controller.personagem, window.saveSlot);
+              });
+            }
+          }
+        }
+        
         passo++;
         if (passo < mensagens.length) {
           mostrarPasso();
         } else {
-          modal.style.display = 'none';
+          overlay.style.display = 'none';
+          // Iniciar o timer quando o tutorial for fechado
+          this.iniciarTimer();
         }
       };
     };

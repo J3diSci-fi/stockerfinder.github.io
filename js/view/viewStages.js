@@ -93,6 +93,9 @@ export default class ViewStages {
         <button class="buttonStage" id="buttonBack"><img class="buttonImg" src="../assets/images/icons/setavoltar.png" alt="...back"></button>
         <button class="buttonStage"   id="buttonStopMusic"><img class="buttonImg" src="../assets/images/icons/som.png" alt="...music" ></button>
       </div>
+      <div class="player-info" style="text-align:center; margin-bottom: 18px; font-size: 1.2em; font-weight: bold; color: #333;">
+        ${personagem ? `Nome do Personagem: <span style='color:#1976D2'>${personagem.nome}</span>` : ''}
+      </div>
       <div class="fases" id="stages">
         <div class="faseCard ${fase2Desbloqueada ? 'fase-desbloqueada' : ''}" id="fase1">
           <h1 class="textH1">Fase 1</h1>

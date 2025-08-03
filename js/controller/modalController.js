@@ -59,6 +59,8 @@ export default class ModalNomePersonagem {
     const slotIndex = this.saveService.addNewPersonagem(personagem);
     if (slotIndex !== -1) {
       window.saveSlot = slotIndex;
+      // Salva o slot como último personagem jogado
+      localStorage.setItem('ultimo_slot', slotIndex);
       console.log(`Personagem salvo no slot ${slotIndex + 1}`);
     } else {
       console.error('Erro ao salvar personagem');

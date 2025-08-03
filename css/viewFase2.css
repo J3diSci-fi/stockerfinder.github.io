@@ -96,4 +96,30 @@
   align-items: center;
   justify-content: center;
   background: #fafafa;
+}
+@keyframes loopSpin {
+  0% { transform: rotate(-15deg);}
+  100% { transform: rotate(15deg);}
+}
+
+/* Estilos para os botões do modal de loop - transparentes */
+.seta-loop-btn {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.seta-loop-btn img {
+  transition: filter 0.2s, transform 0.2s;
+}
+.seta-loop-btn.selected img {
+  filter: drop-shadow(0 0 8px #ffb300) brightness(1.2);
+  transform: scale(1.15);
+}
+.seta-loop-btn:hover img {
+  filter: drop-shadow(0 0 6px #1976d2);
+  transform: scale(1.08);
 } 

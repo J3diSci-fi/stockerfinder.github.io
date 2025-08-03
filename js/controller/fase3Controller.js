@@ -9,18 +9,27 @@ export default class Fase3Controller {
     this.panelVisible = false;
   }
   render() {
+    // Limpar timer anterior se existir
+    if (this.view.timerInterval) {
+      clearInterval(this.view.timerInterval);
+      this.view.timerInterval = null;
+    }
     this.view.renderFase3();
-    document.addEventListener('keydown', this.handleKeyDown);
+    // document.addEventListener('keydown', this.handleKeyDown); // Remover atalho Esc
     setTimeout(() => {
       this.view.reabilitarBotaoExecutar();
     }, 100);
   }
-  handleKeyDown(event) {
-    if (event.key === 'Escape' && !this.panelVisible) {
+  abrirMenuOpcoes() {
+    if (!this.panelVisible) {
       this.panelVisible = true;
       this.view.showOptionsPanel();
       this.addPanelListeners();
+      this.view.pausarTimer && this.view.pausarTimer();
     }
+  }
+  handleKeyDown(event) {
+    // Remover lógica do Esc
   }
   addPanelListeners() {
     const btnContinue = document.getElementById('btnContinue');
@@ -30,6 +39,7 @@ export default class Fase3Controller {
       btnContinue.onclick = () => {
         this.view.hideOptionsPanel();
         this.panelVisible = false;
+        this.view.retomarTimer && this.view.retomarTimer();
       };
     }
     if (btnRestart) {
@@ -113,6 +123,11 @@ export default class Fase3Controller {
         document.body.appendChild(popup);
         document.getElementById('btnVoltarStages').onclick = () => {
           document.body.removeChild(popup);
+          // Limpar timer antes de sair
+          if (this.view.timerInterval) {
+            clearInterval(this.view.timerInterval);
+            this.view.timerInterval = null;
+          }
           if (this.menuController && this.menuController.stagesController) {
             this.menuController.stagesController.setPersonagem(this.personagem);
             this.menuController.stagesController.render();
@@ -172,7 +187,56 @@ export default class Fase3Controller {
         }
         pos = [row, col];
         const valor = matriz[row][col];
-        if (valor && valor !== 'person.png') {
+        
+        // Verificar se há uma bomb (obstáculo)
+        if (valor === 'bomb.png') {
+          erro = true;
+          matriz[pos[0]][pos[1]] = 'person.png';
+          this.view.atualizarGrid(matriz);
+          // Parar o timer
+          if (this.view.timerInterval) {
+            clearInterval(this.view.timerInterval);
+            this.view.timerInterval = null;
+          }
+          setTimeout(() => this.view.mostrarBombPanel(), 400);
+          return;
+        }
+        
+        // Verificar se há um portal (teleporte)
+        if (valor === 'portal.png') {
+          // Encontrar outro portal para teleportar
+          const portais = [
+            [0, 1], [0, 3], [3, 0], [4, 4]
+          ];
+          const portalAtual = [row, col];
+          let portalDestino = null;
+          
+          // Encontrar um portal diferente do atual
+          for (const portal of portais) {
+            if (portal[0] !== portalAtual[0] || portal[1] !== portalAtual[1]) {
+              portalDestino = portal;
+              break;
+            }
+          }
+          
+          if (portalDestino) {
+            // Teleportar para o portal de destino
+            pos = [...portalDestino];
+            matriz[pos[0]][pos[1]] = 'person.png';
+            this.view.atualizarGrid(matriz);
+            
+            // Pequena pausa para mostrar o teleporte
+            setTimeout(() => {
+              matriz[pos[0]][pos[1]] = null;
+              this.view.atualizarGrid(matriz);
+              passo++;
+              setTimeout(andar, delay);
+            }, 500);
+            return;
+          }
+        }
+        
+        if (valor && valor !== 'person.png' && valor !== 'bomb.png' && valor !== 'portal.png') {
           coletados.push(valor);
           coletadosPos.push([row, col]);
           matriz[row][col] = null;

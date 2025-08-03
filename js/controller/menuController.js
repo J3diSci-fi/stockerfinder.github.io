@@ -87,7 +87,27 @@ export default class MenuController {
   }
 
   continueGame(){
-    alert('Use as setas para mover e pegue os itens corretos!');
+    const slot = localStorage.getItem('ultimo_slot');
+    if (slot !== null) {
+      // Importa o personagem salvo
+      import('../services/saveService.js').then(({ default: saveService }) => {
+        const personagemData = saveService.getPersonagem(Number(slot));
+        if (personagemData) {
+          import('../model/personagemModel.js').then(({ default: Personagem }) => {
+            const personagem = Object.assign(new Personagem(personagemData.nome), personagemData);
+            if (personagem.garantirConfiguracoes) personagem.garantirConfiguracoes();
+            if (this.stagesController && typeof this.stagesController.setPersonagem === 'function') {
+              this.stagesController.setPersonagem(personagem);
+              this.stagesController.render();
+            }
+          });
+        } else {
+          alert('Nenhum progresso encontrado para continuar!');
+        }
+      });
+    } else {
+      alert('Nenhum progresso encontrado para continuar!');
+    }
   }
 
   loadGame() {

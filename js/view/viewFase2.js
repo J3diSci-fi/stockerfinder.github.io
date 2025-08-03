@@ -2,9 +2,14 @@ export default class ViewFase2 {
   constructor(controller) {
     this.controller = controller;
     this.blocosMontados = [];
+    this.tempoRestante = 60;
+    this.timerInterval = null;
   }
 
   renderFase2() {
+    // Remover botão antigo se existir
+    const oldBtn = document.getElementById('btnMenuLoop');
+    if (oldBtn && oldBtn.parentNode) oldBtn.parentNode.removeChild(oldBtn);
     import('../model/fase2Model.js').then((module) => {
       const Fase2Model = module.default;
       const ordemColeta = Fase2Model.ordemColeta;
@@ -63,7 +68,7 @@ export default class ViewFase2 {
         <div class="background-fase1">
           <div id="playerNome" style="position:absolute; top:0px; right:32px; color:#fff; font-size:1.1em; font-weight:bold; text-shadow:1px 1px 4px #000; z-index:11;">Player</div>
           <div id="timerFase2" style="position:absolute; top:20px; right:32px; background:rgba(0,0,0,0.7); color:#fff; font-size:1.5em; padding:6px 18px; border-radius:12px; z-index:10;">01:00</div>
-          <div id="avisoLoopFase2" style="position:absolute; top:20px; right:690px; background:rgba(255,193,7,0.95); color:#222; font-size:1.1em; padding:6px 18px; border-radius:12px; z-index:10; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.08);">Utilize o loop pelo menos 1 vez</div>
+          <div id="avisoLoopFase2" style="position:absolute; top:90px; right:770px; background:rgba(255,193,7,0.95); color:#222; font-size:12px; padding:6px 18px; border-radius:12px; z-index:10; font-weight:bold; box-shadow:0 2px 8px rgba(0,0,0,0.08);">Utilize o loop pelo menos 1 vez</div>
           ${ordemHTML}
           ${gridHTML}
           ${prateleiraHTML}
@@ -99,6 +104,29 @@ export default class ViewFase2 {
           </div>
         </div>
       `;
+      // Adicionar botão de menu após o container existir
+      const container = document.querySelector('.background-fase1');
+      if (container && !document.getElementById('btnMenuLoop')) {
+        const btn = document.createElement('button');
+        btn.id = 'btnMenuLoop';
+        btn.style.position = 'absolute';
+        btn.style.top = '20px';
+        btn.style.left = '20px';
+        btn.style.width = '56px';
+        btn.style.height = '56px';
+        btn.style.zIndex = '1002';
+        btn.style.background = 'none';
+        btn.style.border = '1px solid #333';
+        btn.style.borderRadius = '8px';
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = '<img src="../assets/images/game/hamburger.png" alt="Menu" style="width: 100%; height: 100%; object-fit: contain; pointer-events: none;" />';
+        btn.onclick = () => {
+          if (this.controller && typeof this.controller.abrirMenuOpcoes === 'function') {
+            this.controller.abrirMenuOpcoes();
+          }
+        };
+        container.prepend(btn);
+      }
 
       this.preencherPrateleiraInicial();
       this.comandos = [];
@@ -182,18 +210,18 @@ export default class ViewFase2 {
 
       // Timer Fase 2
       if (this.timerInterval) clearInterval(this.timerInterval);
-      let tempoRestante = 60;
+      this.tempoRestante = 60;
       const timerDiv = document.getElementById('timerFase2');
       const atualizarTimer = () => {
-        const min = String(Math.floor(tempoRestante / 60)).padStart(2, '0');
-        const seg = String(tempoRestante % 60).padStart(2, '0');
+        const min = String(Math.floor(this.tempoRestante / 60)).padStart(2, '0');
+        const seg = String(this.tempoRestante % 60).padStart(2, '0');
         timerDiv.textContent = `${min}:${seg}`;
       };
       atualizarTimer();
       this.timerInterval = setInterval(() => {
-        tempoRestante--;
+        this.tempoRestante--;
         atualizarTimer();
-        if (tempoRestante <= 0) {
+        if (this.tempoRestante <= 0) {
           clearInterval(this.timerInterval);
           this.mostrarTempoEsgotadoPanel2();
         }
@@ -225,17 +253,32 @@ export default class ViewFase2 {
   }
 
   showOptionsPanel() {
-    document.getElementById('optionsPanel').style.display = 'flex'; 
+    document.getElementById('optionsPanel').style.display = 'flex';
+    // Ocultar o botão de menu
+    const menuBtn = document.getElementById('btnMenuLoop');
+    if (menuBtn) {
+      menuBtn.style.display = 'none';
+    }
   }
 
   hideOptionsPanel() {
     document.getElementById('optionsPanel').style.display = 'none';
+    // Mostrar o botão de menu novamente
+    const menuBtn = document.getElementById('btnMenuLoop');
+    if (menuBtn) {
+      menuBtn.style.display = 'block';
+    }
   }
 
   showErroPanel() {
     document.getElementById('erroPanel').style.display = 'flex';
     document.getElementById('btnTentarNovamente').onclick = () => {
       this.hideErroPanel();
+      // Limpar timer antes de reiniciar
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+      }
       this.controller.render();
     };
   }
@@ -319,50 +362,130 @@ export default class ViewFase2 {
     modal.style.top = '50%';
     modal.style.transform = 'translate(-50%, -50%)';
     modal.style.zIndex = '1000';
-    modal.style.background = 'transparent';
+    modal.style.background = 'rgba(60, 60, 60, 0.9)'; // cinza mais sólido
     modal.style.borderRadius = '16px';
-    modal.style.boxShadow = '0 2px 16px rgba(0,0,0,0.15)';
+    modal.style.boxShadow = '0 2px 16px rgba(254, 241, 219, 0.9)';
     modal.style.padding = '32px 32px 24px 32px';
     modal.style.display = 'flex';
     modal.style.flexDirection = 'column';
     modal.style.alignItems = 'center';
-    // Layout do controle
+    // Layout do controle melhorado
     modal.innerHTML = `
-      <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
-        <button id="setaCimaLoop" class="seta-loop-btn" style="background: none; border: none; outline: none; cursor: pointer;"><img src="../assets/images/commands/button_top.png" width="48" height="48"></button>
-        <div style="display: flex; flex-direction: row; align-items: center; gap: 32px;">
-          <button id="setaEsquerdaLoop" class="seta-loop-btn" style="background: none; border: none; outline: none; cursor: pointer;"><img src="../assets/images/commands/button_left.png" width="48" height="48"></button>
-          <input id="inputVezesLoop" type="number" min="1" max="20" value="2" style="width: 48px; text-align: center; font-size: 1.2em; border-radius: 8px; border: 1px solid #aaa; padding: 4px;" />
-          <button id="setaDireitaLoop" class="seta-loop-btn" style="background: none; border: none; outline: none; cursor: pointer;"><img src="../assets/images/commands/button_right.png" width="48" height="48"></button>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px; min-width: 320px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <img src="../assets/images/commands/loop.png" alt="Loop" style="width: 48px; height: 48px; animation: loopSpin 1.2s linear infinite alternate;">
+          <h2 style="margin: 0; color: #ffb300;">Configurar Loop</h2>
+          <button id="btnFecharLoop" style="background: none; border: none; font-size: 1.5em; color: #888; cursor: pointer; margin-left: 12px;">&times;</button>
         </div>
-        <button id="setaBaixoLoop" class="seta-loop-btn" style="background: none; border: none; outline: none; cursor: pointer;"><img src="../assets/images/commands/button_down.png" width="48" height="48"></button>
+        <div style="font-size: 1em; color: #fff; margin-bottom: 8px;">Escolha a direção e o número de repetições.</div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
+          <!-- Linha superior: seta para cima -->
+          <div style="display: flex; justify-content: center;">
+            <button id="setaCimaLoop" class="seta-loop-btn" style="background: transparent; border: none; padding: 0; margin: 0; border-radius: 8px; transition: all 0.2s; cursor: pointer;"><img src="../assets/images/commands/button_top.png" width="40" height="40"></button>
+          </div>
+          
+          <!-- Linha do meio: seta esquerda, centro vazio, seta direita -->
+          <div style="display: flex; align-items: center; gap: 32px;">
+            <button id="setaEsquerdaLoop" class="seta-loop-btn" style="background: transparent; border: none; padding: 0; margin: 0; border-radius: 8px; transition: all 0.2s; cursor: pointer;"><img src="../assets/images/commands/button_left.png" width="40" height="40"></button>
+            <div style="width: 40px; height: 40px;"></div>
+            <button id="setaDireitaLoop" class="seta-loop-btn" style="background: transparent; border: none; padding: 0; margin: 0; border-radius: 8px; transition: all 0.2s; cursor: pointer;"><img src="../assets/images/commands/button_right.png" width="40" height="40"></button>
+          </div>
+          
+          <!-- Linha inferior: seta para baixo -->
+          <div style="display: flex; justify-content: center;">
+            <button id="setaBaixoLoop" class="seta-loop-btn" style="background: transparent; border: none; padding: 0; margin: 0; border-radius: 8px; transition: all 0.2s; cursor: pointer;"><img src="../assets/images/commands/button_down.png" width="40" height="40"></button>
+          </div>
+          
+          <!-- Controles de repetição abaixo da seta para baixo -->
+          <div style="display: flex; flex-direction: column; align-items: center; margin-top: 4px;">
+            <div style="font-size: 0.9em; color: #fff; margin-bottom: 2px;">Repetições</div>
+            <div style="display: flex; align-items: center; gap: 3px;">
+              <button id="btnMenosLoop" style="font-size:1.2em; width:28px; height:28px; background: transparent; border: none; cursor: pointer;">-</button>
+              <input id="inputVezesLoop" type="number" min="1" max="20" value="2" style="width: 40px; text-align: center; font-size: 1.1em; border-radius: 6px; border: 1px solid #aaa; padding: 3px;" />
+              <button id="btnMaisLoop" style="font-size:1.2em; width:28px; height:28px; background: transparent; border: none; cursor: pointer;">+</button>
+            </div>
+          </div>
+        </div>
+        <div id="previewLoop" style="margin: 12px 0; font-size: 1.1em; color: #ffffff;">Repetir Cima por 2 vezes</div>
+        <button id="btnConfirmarLoop" style="margin-top: 8px; padding: 10px 32px; font-size:1.1em; border-radius:8px; border:none; background:#4caf50; color:white; cursor:pointer;">Adicionar Loop</button>
       </div>
-      <button id="btnConfirmarLoop" style="margin-top: 24px; padding: 8px 24px; font-size: 1.1em; border-radius: 8px; border: none; background: #4caf50; color: white; cursor: pointer;">Confirmar Repetição</button>
     `;
     document.body.appendChild(modal);
     // Lógica de seleção de direção
     let direcaoSelecionada = 'Cima';
+    let vezesSelecionado = 2;
     const setas = {
       'Cima': document.getElementById('setaCimaLoop'),
       'Baixo': document.getElementById('setaBaixoLoop'),
       'Esquerda': document.getElementById('setaEsquerdaLoop'),
       'Direita': document.getElementById('setaDireitaLoop'),
     };
-    const destacarSeta = (dir) => {
+    const preview = document.getElementById('previewLoop');
+    const inputVezes = document.getElementById('inputVezesLoop');
+    const btnMenos = document.getElementById('btnMenosLoop');
+    const btnMais = document.getElementById('btnMaisLoop');
+    const btnFechar = document.getElementById('btnFecharLoop');
+    // Função para atualizar preview
+    function atualizarPreview() {
+      preview.textContent = `Repetir ${direcaoSelecionada} por ${vezesSelecionado} vez${vezesSelecionado > 1 ? 'es' : ''}`;
+    }
+    // Função para destacar seta
+    function destacarSeta(dir) {
       Object.entries(setas).forEach(([d, btn]) => {
-        if (btn) btn.style.filter = d === dir ? 'drop-shadow(0 0 8px #2196f3)' : 'none';
+        if (btn) {
+          if (d === dir) {
+            btn.classList.add('selected');
+            btn.style.background = 'rgba(25, 118, 210, 0.2)';
+            btn.style.boxShadow = '0 0 15px rgba(25, 118, 210, 0.6)';
+            btn.style.border = '2px solid rgba(25, 118, 210, 0.8)';
+          } else {
+            btn.classList.remove('selected');
+            btn.style.background = 'transparent';
+            btn.style.boxShadow = 'none';
+            btn.style.border = 'none';
+          }
+        }
       });
-    };
+    }
     Object.entries(setas).forEach(([dir, btn]) => {
       if (btn) btn.onclick = () => {
         direcaoSelecionada = dir;
         destacarSeta(dir);
+        atualizarPreview();
       };
     });
     destacarSeta('Cima');
+    atualizarPreview();
+    // Botões + e -
+    btnMenos.onclick = () => {
+      let v = parseInt(inputVezes.value, 10);
+      if (v > 1) v--;
+      inputVezes.value = v;
+      vezesSelecionado = v;
+      atualizarPreview();
+    };
+    btnMais.onclick = () => {
+      let v = parseInt(inputVezes.value, 10);
+      if (v < 20) v++;
+      inputVezes.value = v;
+      vezesSelecionado = v;
+      atualizarPreview();
+    };
+    inputVezes.oninput = () => {
+      let v = parseInt(inputVezes.value, 10);
+      if (isNaN(v) || v < 1) v = 1;
+      if (v > 20) v = 20;
+      inputVezes.value = v;
+      vezesSelecionado = v;
+      atualizarPreview();
+    };
+    // Botão de fechar
+    btnFechar.onclick = () => {
+      this.fecharModalLoop();
+    };
     // Confirmar
     document.getElementById('btnConfirmarLoop').onclick = () => {
-      const vezes = parseInt(document.getElementById('inputVezesLoop').value, 10);
+      const vezes = parseInt(inputVezes.value, 10);
       this.fecharModalLoop();
       callback(direcaoSelecionada, vezes);
     };
@@ -380,6 +503,8 @@ export default class ViewFase2 {
       document.getElementById('btnTentarNovamenteTempo2').onclick = () => {
         panel.style.display = 'none';
         if (this.timerInterval) clearInterval(this.timerInterval);
+        this.timerInterval = null;
+        this.tempoRestante = 60;
         this.controller.render();
       };
     }
@@ -407,6 +532,39 @@ export default class ViewFase2 {
     }
     document.getElementById('btnFecharRequisitoLoop').onclick = () => {
       panel.style.display = 'none';
+      // Limpar timer antes de reiniciar
+      if (this.timerInterval) {
+        clearInterval(this.timerInterval);
+        this.timerInterval = null;
+      }
+      this.controller.render();
     };
+  }
+
+  pausarTimer() {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  retomarTimer() {
+    if (this.timerInterval === null && this.tempoRestante > 0) {
+      const timerDiv = document.getElementById('timerFase2');
+      const atualizarTimer = () => {
+        const min = String(Math.floor(this.tempoRestante / 60)).padStart(2, '0');
+        const seg = String(this.tempoRestante % 60).padStart(2, '0');
+        timerDiv.textContent = `${min}:${seg}`;
+      };
+      atualizarTimer();
+      this.timerInterval = setInterval(() => {
+        this.tempoRestante--;
+        atualizarTimer();
+        if (this.tempoRestante <= 0) {
+          clearInterval(this.timerInterval);
+          this.mostrarTempoEsgotadoPanel2();
+        }
+      }, 1000);
+    }
   }
 } 

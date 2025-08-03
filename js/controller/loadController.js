@@ -51,7 +51,10 @@ export default class LoadController {
         if (personagem && this.onLoadPersonagem) {
           import('../model/personagemModel.js').then(({ default: Personagem }) => {
             const personagemInstancia = Object.assign(new Personagem(personagem.nome), personagem);
+            personagemInstancia.garantirConfiguracoes(); // Garantir que as configurações existam
             window.saveSlot = slot;
+            // Salva o slot como último personagem jogado
+            localStorage.setItem('ultimo_slot', slot);
             this.onLoadPersonagem(personagemInstancia, slot);
           });
         }

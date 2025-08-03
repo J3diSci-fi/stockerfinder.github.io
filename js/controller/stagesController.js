@@ -65,9 +65,10 @@ export default class StagesController {
         console.log('Fase 1 selecionada');
         if (this.personagem) {
           console.log(`Iniciando Fase 1 com personagem: ${this.personagem.nome}`);
-          // Chama o controller da Fase 1
+          // Recupera o slot salvo
+          const slot = localStorage.getItem('ultimo_slot');
           import('../controller/fase1Controller.js').then(({ default: Fase1Controller }) => {
-            const fase1Controller = new Fase1Controller(this.rootElement, this.menuController, this.personagem);
+            const fase1Controller = new Fase1Controller(this.rootElement, this.menuController, this.personagem, slot ? Number(slot) : undefined);
             fase1Controller.render();
           });
         } else {

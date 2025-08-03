@@ -1,22 +1,40 @@
 import ViewFase1 from '../view/viewFase1.js';
 
 export default class Fase1Controller {
-  constructor(rootElement, menuController, personagem) {
+  constructor(rootElement, menuController, personagem, slot) {
     this.rootElement = rootElement;
     this.menuController = menuController;
     this.personagem = personagem;
     this.view = new ViewFase1(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.panelVisible = false;
+    // Salva o slot do personagem atual para o botão Continuar
+    if (typeof slot !== 'undefined') {
+      localStorage.setItem('ultimo_slot', slot);
+    }
   }
 
   render() {
+    // Limpar timer anterior se existir
+    if (this.view.timerInterval) {
+      clearInterval(this.view.timerInterval);
+      this.view.timerInterval = null;
+    }
     this.view.renderFase1();
     document.addEventListener('keydown', this.handleKeyDown);
     // Reabilitar o botão executar quando a fase é reiniciada
     setTimeout(() => {
       this.view.reabilitarBotaoExecutar();
     }, 100);
+  }
+
+  abrirMenuOpcoes() {
+    if (!this.panelVisible) {
+      this.panelVisible = true;
+      this.view.showOptionsPanel();
+      this.addPanelListeners();
+      this.view.pausarTimer && this.view.pausarTimer();
+    }
   }
 
   handleKeyDown(event) {
@@ -35,17 +53,28 @@ export default class Fase1Controller {
       btnContinue.onclick = () => {
         this.view.hideOptionsPanel();
         this.panelVisible = false;
+        this.view.retomarTimer && this.view.retomarTimer();
       };
     }
     if (btnRestart) {
       btnRestart.onclick = () => {
         this.panelVisible = false;
+        // Limpar o timer quando reiniciar
+        if (this.view.timerInterval) {
+          clearInterval(this.view.timerInterval);
+          this.view.timerInterval = null;
+        }
         this.view.limparPrateleira();
         this.render();
       };
     }
     if (btnExit) {
       btnExit.onclick = () => {
+        // Limpar o timer quando sair
+        if (this.view.timerInterval) {
+          clearInterval(this.view.timerInterval);
+          this.view.timerInterval = null;
+        }
         document.removeEventListener('keydown', this.handleKeyDown);
         this.menuController.render();
       };
@@ -103,6 +132,11 @@ export default class Fase1Controller {
         document.body.appendChild(popup);
         document.getElementById('btnVoltarStages').onclick = () => {
           document.body.removeChild(popup);
+          // Limpar timer antes de sair
+          if (this.view.timerInterval) {
+            clearInterval(this.view.timerInterval);
+            this.view.timerInterval = null;
+          }
           // Voltar para tela de fases
           if (this.menuController && this.menuController.stagesController) {
             this.menuController.stagesController.setPersonagem(this.personagem);
